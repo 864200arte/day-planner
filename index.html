@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+    <title>Мій день</title>
+    <meta name="description" content="Особистий планувальник дня: календар, завдання, фокус, звички, цілі та щоденник." />
+    <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f3f3f8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0b10" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Мій день" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png" />
+    <style>
+      /* Те, що користувач бачить до завантаження JS — без білого спалаху */
+      html, body { background: #0b0b10; margin: 0; }
+      @media (prefers-color-scheme: light) { html:not([data-theme]), html:not([data-theme]) body { background: #f3f3f8; } }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
