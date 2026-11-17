@@ -42,6 +42,7 @@ export const DEFAULT_SETTINGS: Settings = {
   aiEnabled: false,
   aiServer: '',
   pushServer: '',
+  pushAuto: true,
 };
 
 export const ACCENTS = ['#8b7cff', '#3b82f6', '#06b6d4', '#22c55e', '#f59e0b', '#f43f5e', '#ec4899'];

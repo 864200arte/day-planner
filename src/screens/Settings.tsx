@@ -131,7 +131,8 @@ export const NotificationsPage = () => {
     const p = await Notification.requestPermission(); setSup(pushSupport());
     setMsg(p === 'granted' ? t('Дозвіл надано.') : t('Дозвіл не надано — змініть у Налаштуваннях iPhone → Сповіщення.'));
   };
-  const saveServer = (v: string) => { setServer(v); S.updateSettings({ pushServer: v.trim() }); setAlive(null); };
+  const saveServer = (v: string) => { setServer(v); S.updateSettings({ pushServer: v.trim(), pushAuto: false }); setAlive(null); };
+  useEffect(() => { if (s.pushAuto) setServer(s.pushServer); }, [s.pushAuto, s.pushServer]);
 
   return (
     <PageShell title={t('Сповіщення')} sub={t('Що можливо на iPhone — чесно й без обіцянок зайвого.')}>
@@ -149,6 +150,7 @@ export const NotificationsPage = () => {
         <div><SectionTitle>Web Push ({t('опційно, потрібен сервер')})</SectionTitle>
           <Card className="p-4 flex flex-col gap-3">
             <div className="text-[13px] text-mute leading-snug">{t('Без сервера нагадування спрацьовують лише коли застосунок відкрито: iOS не дозволяє вебзастосункам запускати таймери у фоні. Для нагадувань у закритому застосунку запустіть push-сервер (папка server/ — безкоштовний, див. README) і вкажіть його адресу.')}</div>
+            <div className="flex items-center justify-between"><div><div className="font-semibold">{t('Адреса сервера автоматично')}</div><div className="text-[12.5px] text-mute">{t('Застосунок сам підхоплює адресу вашого домашнього сервера')}</div></div><Toggle checked={s.pushAuto} onChange={(v) => S.updateSettings({ pushAuto: v })} label="auto" /></div>
             <TextInput value={server} onChange={(e) => saveServer(e.target.value)} placeholder="https://your-push-server.example.com" inputMode="url" autoCapitalize="off" autoCorrect="off" />
             <div className="flex flex-wrap gap-2">
               <Btn size="sm" variant="ghost" onClick={async () => setAlive(await pingServer(server))}>{t('Перевірити сервер')}{alive != null ? (alive ? ' ✓' : ' ✕') : ''}</Btn>

@@ -5,7 +5,8 @@ import { ui, useUI, type PageName, type Tab } from './ui/uiStore';
 import { useVisualViewport } from './ui/kit';
 import { startReminderEngine, type Due } from './lib/reminders';
 import { playSound } from './lib/sound';
-import { syncPush } from './lib/push';
+import { discoverServer, syncPush } from './lib/push';
+import { updateSettings } from './lib/store';
 import { autoSnapshotIfNeeded } from './lib/backup';
 import { ACHIEVEMENTS, computeMetrics, newlyUnlocked } from './lib/achievements';
 import { applyTheme } from './lib/store';
@@ -108,6 +109,20 @@ export const App = () => {
     }, 900);
     return () => clearTimeout(id);
   }, [app.tasks, app.habits, app.goals, app.sessions, app.journal, app.days, app.ready]);
+
+  // автопідхоплення адреси push-сервера (при старті й щоразу, коли застосунок повертається на екран)
+  useEffect(() => {
+    if (!app.ready) return;
+    const check = async () => {
+      if (!getState().settings.pushAuto) return;
+      const url = await discoverServer();
+      if (url && url !== getState().settings.pushServer) { updateSettings({ pushServer: url }); syncPush(); }
+    };
+    check();
+    const onVis = () => { if (!document.hidden) check(); };
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, [app.ready]);
 
   // синхронізація push-розкладу
   useEffect(() => { if (app.ready) syncPush(); }, [app.tasks, app.settings.morningEnabled, app.settings.morningTime, app.settings.eveningEnabled, app.settings.eveningTime, app.settings.remindOverdue, app.ready]);

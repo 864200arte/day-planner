@@ -97,6 +97,19 @@ export const sendTestPush = async (server: string) => {
   } catch (e: any) { return { ok: false, msg: 'Сервер недоступний: ' + (e?.message || e) }; }
 };
 
+/** Адреса, за якою сервер публікує свою поточну HTTPS-адресу (тунель може змінювати її після перезапуску). */
+export const DISCOVERY_URL = (import.meta.env.VITE_PUSH_DISCOVERY as string | undefined) || '';
+
+export const discoverServer = async (): Promise<string | null> => {
+  if (!DISCOVERY_URL) return null;
+  try {
+    const r = await fetch(`${DISCOVERY_URL}?t=${Date.now()}`, { cache: 'no-store' });
+    if (!r.ok) return null;
+    const j = await r.json();
+    return typeof j.pushServer === 'string' && /^https:\/\/[^\s/]+$/.test(j.pushServer) ? j.pushServer : null;
+  } catch { return null; }
+};
+
 export const pingServer = async (server: string) => {
   try { const r = await fetch(`${base(server)}/api/health`); return r.ok; } catch { return false; }
 };

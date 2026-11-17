@@ -90,6 +90,7 @@ export interface Settings {
   personalization: boolean;
   aiEnabled: boolean; aiServer: string;
   pushServer: string;
+  pushAuto: boolean;          // підхоплювати адресу сервера автоматично (файл у GitHub)
 }
 
 export interface Occ {
